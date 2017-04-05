@@ -65,7 +65,6 @@ def login():
             # 没有next参数，则重定向到"index"视图
             next = request.args.get('next')
             return redirect(next or url_for('list'))
-
         flash('Wrong username or password!')
     # GET 请求
     return render_template('login.html')

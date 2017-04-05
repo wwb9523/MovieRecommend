@@ -9,32 +9,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen">
     <link rel="archives" title="December 2010" href="http://pro.towfiqi.com/?m=201012">
     <link rel="stylesheet" href="{{ url_for('static', filename='lobster.css') }}" type="text/css" media="screen">
-    <script type="text/javascript">
-window.onload = function () {
-	try {
-		var i, et = document.getElementById('tags').childNodes;
-		for (i in et) {
-			et[i].nodeName == 'A' && et[i].addEventListener('click', function (e) {
-				e.preventDefault();
-			});
-		}
+    <!--<script type="text/javascript">-->
+<!--window.onload = function () {-->
+	<!--try {-->
+		<!--var i, et = document.getElementById('tags').childNodes;-->
+		<!--for (i in et) {-->
+			<!--et[i].nodeName == 'A' && et[i].addEventListener('click', function (e) {-->
+				<!--e.preventDefault();-->
+			<!--});-->
+		<!--}-->
 
-		TagCanvas.Start('myCanvas', 'tags', {
-			textColour: '#222',
-			outlineColour: '#fff',
-			reverse: true,
-			depth: 0.8,
-			dragControl: true,
-			decel:0.95,
-			maxSpeed: 0.05,
-			initial: [-0.2, 0]
-		});
-	} catch (e) {
-		// something went wrong, hide the canvas container
-		//document.getElementById('myCanvasContainer').style.display = 'none';
-	}
-};
-</script>
+		<!--TagCanvas.Start('myCanvas', 'tags', {-->
+			<!--textColour: '#222',-->
+			<!--outlineColour: '#fff',-->
+			<!--reverse: true,-->
+			<!--depth: 0.8,-->
+			<!--dragControl: true,-->
+			<!--decel:0.95,-->
+			<!--maxSpeed: 0.05,-->
+			<!--initial: [-0.2, 0]-->
+		<!--});-->
+	<!--} catch (e) {-->
+		<!--// something went wrong, hide the canvas container-->
+		<!--//document.getElementById('myCanvasContainer').style.display = 'none';-->
+	<!--}-->
+<!--};-->
+<!--</script>-->
 
     <title>推荐列表</title>
 </head>
