@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<script src="{{ url_for('static', filename='tagcanvas.min.js') }}"></script>-->
+    <script src="{{ url_for('static', filename='jquery-1.6.2.min.js') }}"></script>
+
+    <link href="{{ url_for('static', filename='list.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen">
+    <link rel="archives" title="December 2010" href="http://pro.towfiqi.com/?m=201012">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lobster.css') }}" type="text/css" media="screen">
+    <script type="text/javascript">
+window.onload = function () {
+	try {
+		var i, et = document.getElementById('tags').childNodes;
+		for (i in et) {
+			et[i].nodeName == 'A' && et[i].addEventListener('click', function (e) {
+				e.preventDefault();
+			});
+		}
+
+		TagCanvas.Start('myCanvas', 'tags', {
+			textColour: '#222',
+			outlineColour: '#fff',
+			reverse: true,
+			depth: 0.8,
+			dragControl: true,
+			decel:0.95,
+			maxSpeed: 0.05,
+			initial: [-0.2, 0]
+		});
+	} catch (e) {
+		// something went wrong, hide the canvas container
+		//document.getElementById('myCanvasContainer').style.display = 'none';
+	}
+};
+</script>
+
+    <title>推荐列表</title>
+</head>
+<body>
+<div id="wrapper">
+    <div id="header">
+    <div id="logo"><h1>    <a href="http://pro.towfiqi.com">Amphion</a>
+    </h1></div>
+    </div>
+    <div id="topmenu">
+        <div class="menu-header">
+            <ul id="menu-headmenu" class="menu">
+                <li id="menu-item-39" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-39" style="padding-left: 9px; padding-bottom: 4px;">
+        <a href="http://pro.towfiqi.com/">Home</a>
+                </li>
+<li id="menu-item-40" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-40" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?page_id=2">About</a></li>
+<li id="menu-item-87" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-87" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?page_id=82">Sliders</a>
+    <ul class="sub-menu ul_hover" style="opacity: 0; margin-top: 20px; padding-top: 20px; display: none;">
+	<li id="menu-item-59" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-59" style="padding-left: 9px; padding-bottom: 4px; margin-top: 4px;"><a href="http://pro.towfiqi.com/?page_id=57">With No Sidebar</a></li>
+	<li id="menu-item-60" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-60" style="padding-left: 9px; padding-bottom: 4px;"><a href="http://pro.towfiqi.com/?page_id=55">With Left Sidebar</a></li>
+	<li id="menu-item-69" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-69" style="padding-left: 9px; padding-bottom: 4px;"><a href="http://pro.towfiqi.com/?page_id=67">Portfolio</a></li>
+<div class="submenu_bottom"></div></ul>
+</li>
+<li id="menu-item-45" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-45" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?page_id=22">Skins</a>
+</li>
+<li id="menu-item-61" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-61" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?page_id=53">Page Layouts</a>
+</li>
+<li id="menu-item-38" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-38" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?cat=1">Uncategorized</a></li>
+   <li id="menu-item-30" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-30" style="padding-left: 9px; padding-bottom: 4px;">
+    <a href="http://pro.towfiqi.com/?cat=1">Welcome Mike</a></li>
+</ul></div></div>
+
+<div id="content">
+    <!--<div id="search">-->
+        <!--<div class="b_10_3">-->
+            <!--<canvas width="300" height="300" id="myCanvas"></canvas>-->
+            <!--<div id="tags">-->
+                <!--<a href="#">爱</a>-->
+                <!--<a href="#">承诺</a><a href="#">轻时尚</a><a href="#">简约</a><a href="#">科技</a>-->
+                <!--<a href="#">美丽</a><a href="#">智慧</a><a href="#">情感</a><a href="#">体验</a><a href="#">互联网</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="search_div">-->
+            <!--<form id="search_form" method="post" action="{{ url_for('recommend') }}"  enctype="multipart/form-data">-->
+                <!--<input id="tag" class="form_input" value="" type="hidden">-->
+                <!--<a id="tag_text" class="form_input"></a>-->
+                <!--<label class="form_input">关键字<input  id="search_word" name="word" placeholder="What are you looking for?"/></label>-->
+                <!--<input type="file" name="data" class="form_input"/>-->
+            <!--</form>-->
+        <!--</div>-->
+        <!--<div class="clearfix"></div>-->
+    <!--</div>-->
+
+
+    <div id="movie_list">
+    <ol>
+        <li>
+            <div class="subject">
+                <div class="mov_name">
+                <span property="v:itemreviewed">爱乐之城 La La Land</span>
+                <span class="year">(2016)</span>
+            </div>
+                <div  class="mainpic">
+                    <a class="nbgnbg" href="#" title="点击看更多海报">
+                        <img src="https://img3.doubanio.com/view/movie_poster_cover/lpst/public/p2425658570.webp" title="点击看更多海报" alt="La La Land" rel="v:image">
+                   </a>
+                </div>
+                <div class="info">
+                    <span class="info_list">
+                        <span class="pl">导演</span>
+                        <span class="attrs"><a href="/celebrity/1014996/" rel="v:directedBy">达米恩·查泽雷</a></span>
+                    </span>
+                    <span class="info_list">
+                        <span class="pl">编剧</span>
+                        <span class="attrs"><a href="/celebrity/1014996/">达米恩·查泽雷</a></span>
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </li>
+    </ol>
+        </div>
+</div>
+</div>
+</body>
+</html>

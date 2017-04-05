@@ -1,0 +1,51 @@
+/*
+Theme Name: Amphion Pro
+Description: Amphion PRO is a wordpress theme with (*)7 skins-(*) 3 Sliders (*)Unique homepage layout (*)2 Menu positions (*)Multi-level Dropdown Menu(*)Numbered Page Navigation (*)5 custom widget (*)3 custom page template(*)Social share links(*)10 Fonts(*)Threaded comments support(*)5 easy to use shortcodes(*)Fancy lightbox(*)(*)Realted Posts Feature (*)Favion Feature (*)Option to Display Image LOGO (*) Search Engine Optimization Options(*)IE6 Browser Upgrade Alert!(*)Separation of Comments and Trackbacks(*)User-friendly Options (*)well-written documentation(*)100% Valid XHTML/CSS
+Version: 1.0
+Theme URI: http://www.towfiqi.com/amphion-pro-wordpress-theme.html
+Author: Towfiq I.
+Author URI: http://www.towfiqi.com/
+License: GNU General Public License, v2 (or newer)
+License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+Tags: theme-options, one-column, dark, purple, black, brown, right-sidebar
+*/
+
+body{ background: #eeeeee url(images/bg.png); margin:0; padding:0;}
+
+#wrapper{width:960px; margin:0 auto;}
+#header{width:960px; float:left;}
+
+h1, h2, h3, h4, h5, h6{ color:#323232;}
+
+/*LOGO*/
+#logo{float:left; margin-top:40px;}
+#logo h1 a{color:#323232; text-decoration:none; font-size:40px;}
+#logo img{ border:none;}
+.desc{ margin-bottom:20px;}
+/*MENU*/
+#topmenu{width:960px;}
+.menu-header{float:right;}
+#topmenu ul{ margin:0; padding:0;}
+#topmenu ul li{ float:left; list-style-type:none; padding:0px 20px;}
+#topmenu ul li a{ color:#323232; text-decoration:none; font-size:18px; display:block;}
+/*Submenu*/
+#topmenu ul li ul{ position:absolute; padding:0; z-index:100000; width:128px; margin-left:-50px; display:none;}
+#topmenu ul li ul a{font-family:Arial, Helvetica, sans-serif;}
+#topmenu .ul_hover{ background:url(images/sub-menu_top.gif) top no-repeat;}
+#topmenu ul li ul li { float:none; background:url(images/sub-menu_mid.gif) no-repeat; text-align:center;}
+#topmenu ul li ul li:hover{ background:url(images/sub-menu_mid_hover.gif) no-repeat;}
+#topmenu ul .submenu_bottom{ width:128px; height:12px; background:url(images/sub-menu_bottom.gif) no-repeat;}
+#topmenu ul li ul li a{ background:none; color:#f2f2f2; text-transform:none; font-weight:normal; font-size:11px;  padding:0px; position:relative;}
+#topmenu ul li ul li a span{ background:url(images/buttonbg.png) repeat-x; width:120px; display:block; height:15px; border: 1px solid #15c9e3; color:#fff; margin-left:3px; cursor:pointer;}
+#topmenu ul li ul li .ul_hover{ position:relative; padding:0; margin:0;}
+#topmenu ul li ul li .ul_hover{ background:none; margin:0; padding:0;}
+#topmenu ul li ul li .ul_hover { margin-left:-9px;}
+#topmenu ul li ul li .ul_hover .submenu_bottom{display:none;}
+
+/*CONTENT*/
+#content{width:960px; float:left; margin-top:30px;}
+#posts{ width:600px; float:left;}
+
+.navigation a{ color:#323232; text-decoration:none;}
+.nxt_page{ float:right;}
+.prv_page{ float:left;}
