@@ -87,6 +87,7 @@ class KMeansClassifier():
                 minIndex = -1  # 将最近质心的下标置为-1
                 movie1 = Movie().getMovieById(i)
                 for j in range(self._k):  # 次迭代用于寻找最近的质心
+                    print("%d,%d"%(i,self._centroids[j]))
                     distance=mydb.getSimById(i,self._centroids[j])
                     if not distance:
                         movie2=Movie().getMovieById(self._centroids[j])
