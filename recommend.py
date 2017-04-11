@@ -72,16 +72,7 @@ def loop():
 
 
 if __name__=='__main__':
-    #loop()
-    pkl="clf1000_3.pkl"
-    input = open(pkl, 'rb')
-    mk = pickle.load(input)
-    input.close()
-    sil=Silhouette(mk)
-    mk._sil=sil
-    output = open(pkl, 'wb')
-    pickle.dump(mk, output)
-    output.close()
+    loop()
     # while(True):
     #     t1=time.time()
     #     recommend=Recommend()
