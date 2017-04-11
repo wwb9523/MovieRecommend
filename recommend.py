@@ -57,19 +57,15 @@ class Recommend(object):
 def run(k=3):
     print(k)
     recommend = Recommend()
-    while True:
-        recommend.clustering(k)
+    recommend.clustering(k)
 
 def loop():
     list_k=[4,5,6,7,8]
-    run_list=[]
     p = multiprocessing.Pool()
     for k in list_k:
         p.apply_async(run(k),args=(k))
     p.close()
     p.join()
-
-
 
 if __name__=='__main__':
     loop()

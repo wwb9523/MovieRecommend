@@ -111,6 +111,7 @@ class ItemBasedCF:
 if __name__=='__main__':
     itemBasedCF=ItemBasedCF('train.data','test.data')
     itemBasedCF.ItemSimilarity()
-    print(itemBasedCF.RecallAndPrecision())
-    print(itemBasedCF.Coverage())
-    print(itemBasedCF.Popularity())
+    print(itemBasedCF.Recommend(6))
+    # print(itemBasedCF.RecallAndPrecision())
+    # print(itemBasedCF.Coverage())
+    # print(itemBasedCF.Popularity())

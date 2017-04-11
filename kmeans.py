@@ -10,6 +10,7 @@ import random
 from  DB import MyDB
 from Movie import Movie
 from function import distMovie
+import time
 
 class KMeansClassifier():
     "this is a k-means classifier"
@@ -66,7 +67,9 @@ class KMeansClassifier():
                 self.movie_all.append(Movie())
                 self.movie_num.append(0)
                 self._centroids.append(c)
+        t1=time.time()
         for _ in range(self._max_iter):
+            start=time.time()
             clusterChanged = False
             for i in movIndex:
                 minDist = np.inf  # 首先将minDist置为一个无穷大的数
@@ -93,6 +96,8 @@ class KMeansClassifier():
                     self.movie_num[minIndex-1]+=1
                     self._clusterAssment[iindex, :2] = minIndex, minDist ** 2
             if not clusterChanged:  # 若所有样本点所属的族都不改变,则已收敛,结束迭代
+                t2=time.time()
+                print('共耗时：%s'%(t2-t1))
                 break
             for i in range(self._k):  # 更新质心，将每个族中的点的均值作为质心
                 movie_mean=self.movie_all[i]
@@ -103,16 +108,18 @@ class KMeansClassifier():
                 minDis=np.inf
                 for ind in value:
                     movie=Movie().getMovieById(self._clusterAssment[ind][2])
-                    dis=self.distMovie(movie,movie_mean)
+                    dis=distMovie(movie,movie_mean)
                     if dis<minDis:
                         mindex=self._clusterAssment[ind][2]
                 self._centroids[i] =mindex
             self._labels = self._clusterAssment[:, 0]
             self._sse = sum(self._clusterAssment[:, 1])
+            end=time.time()
+            print('第%s次聚类迭代耗时：%s'%(_,end-start))
+            print('中心点:')
+            print(self._centroids)
+            print('SSE: %s'%self._sse)
             #print(self._sse)
-
-
-
 
     def fit(self, data_X):
         """
@@ -264,5 +271,5 @@ if __name__=='__main__':
     km=KMeansClassifier()
     m1=Movie().getMovieById(1)
     m2=Movie(). getMovieById(100)
-    dis=km.distMovie(m1,m2)
+    dis=distMovie(m1,m2)
     print(dis)

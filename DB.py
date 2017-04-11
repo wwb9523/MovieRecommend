@@ -131,7 +131,7 @@ class MyDB(object):
         else:
             m2,m1=movId1,movId2
         if not self.selectDistance(m1,m2):
-            print('insert distance %s,%s,%s' % (m1, m2,distance))
+            #print('insert distance %s,%s,%s' % (m1, m2,distance))
             sql='insert into sim_mov(movId1,movId2,distance) VALUES(%s,%s,%s)'%(m1,m2,distance)
             return self.cursor.execute(sql)
         else:
