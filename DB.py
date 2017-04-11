@@ -10,7 +10,7 @@ class MyDB(object):
             port = 3306,
             user='root',
             passwd='',
-            db ='recom',
+            db ='test',
             charset='utf8'
             )
         self.cursor=self.db.cursor()
@@ -224,3 +224,7 @@ class MyDB(object):
         if res:
             return res[0][0]
         return None
+
+    def insertUData(self,userId,itemId,rating,item):
+        sql='insert into udata(user_id,item_id,rating,movieLens_id) values(%s,%s,%s,%s)'%(userId,itemId,rating,item)
+        return self.cursor.execute(sql)

@@ -114,14 +114,14 @@ class Recommend(object):
         output.close()
 
 if __name__=='__main__':
-    # input = open("clf1000_3.pkl", 'rb')
-    # mk = pickle.load(input)
-    # input.close()
-    # print(mk._sse)
-    while(True):
-        t1=time.time()
-        recommend=Recommend()
-        recommend.clustering()
-        t2=time.time()
-        print(t2-t1)
+    input = open("clf1000_3.pkl", 'rb')
+    mk = pickle.load(input)
+    input.close()
+    print(mk._sse)
+    # while(True):
+    #     t1=time.time()
+    #     recommend=Recommend()
+    #     recommend.clustering()
+    #     t2=time.time()
+    #     print(t2-t1)
 
