@@ -1,41 +1,14 @@
 import numpy as np
 from Movie import Movie
 from DB import MyDB
+import multiprocessing
 from kmeans import KMeansClassifier
 import pickle
 import os,time
+from function import distMovie
 
 class Recommend(object):
     def __init__(self,k=3, initCent='random', max_iter=500):
-        # myDB = MyDB()
-        # self.genresWeight=2
-        # self.langWeight=2
-        # self.countryWeight=2
-        # self.castIndex = {}
-        # self.directorIndex = {}
-        # self.writerIndex = {}
-        # self.castsCount = myDB.getCountCasts()
-        # self.directorCount = myDB.getCountDirector()
-        # self.writerCount = myDB.getCountWriter()
-        # self.castsEmpty = [0 for n in range(len(self.castsCount))]
-        # self.directorEmpty = [0 for n in range(len(self.directorCount))]
-        # self.writerEmpty = [0 for n in range(len(self.writerCount))]
-        # self.langEmpty = [0 for n in range(myDB.getLanguage())]
-        # self.genresEmpty = [0 for n in range(myDB.getGenres())]
-        # self.countryEmpty = [0 for n in range(myDB.getCountries())]
-        # i = 0
-        # for item in self.castsCount:
-        #     self.castIndex[item[0]] = i
-        #     i = i + 1
-        # i = 0
-        # for item in self.directorCount:
-        #     self.directorIndex[item[0]] = i
-        #     i = i + 1
-        # i = 0
-        # for item in self.writerCount:
-        #     self.writerIndex[item[0]] = i
-        #     i = i + 1
-        # myDB.db.close()
         self._k = k
         self._initCent = initCent
         self._max_iter = max_iter
@@ -57,43 +30,11 @@ class Recommend(object):
     def dist(self,vect1,vect2):
         return np.sqrt(np.sum(np.square(vect1 - vect2)))
 
-    # def getMovie(self,id):
-    #     mydb=MyDB()
-    #     casts=self.castsEmpty
-    #     director=self.directorEmpty
-    #     writer=self.writerEmpty
-    #     lang=self.langEmpty
-    #     genres=self.genresEmpty
-    #     country=self.countryEmpty
-    #     genresRel = mydb.getGenresRela(id)
-    #     countryRel = mydb.getCountryRela(id)
-    #     castsRel = mydb.getCastRela(id)
-    #     directorRel = mydb.getDirectorsRela(id)
-    #     langRel = mydb.getLanguageRela(id)
-    #     writerRel = mydb .getWriterRela(id)
-    #     for item in castsRel:
-    #         casts[self.castIndex[item[0]]]=item[1]
-    #     for item in directorRel:
-    #         director[self.directorIndex[item[0]]]=item[1]
-    #     for item in writerRel:
-    #         writer[self.writerIndex[item[0]]]=item[1]
-    #     for item in genresRel:
-    #         genres[item[0]]=self.genresWeight
-    #     for item in countryRel:
-    #         country[item[0]]=self.countryWeight
-    #     for item in langRel:
-    #         lang[item[0]]=self.langWeight
-    #     year,length=mydb.getMovieById(id)
-    #     movie=Movie(genres,director,casts,lang,country,year,length)
-    #     mydb.db.close()
-    #     return movie
-
-
-    def clustering(self):
+    def clustering(self,k=3):
+        print(k)
         mydb=MyDB()
         limit=1000
         movIndex=mydb.getMovieIndex(limit)
-        k = 3
         clf = KMeansClassifier(k)
         clf.fit_sim(movIndex)
         print(clf._labels)
@@ -113,11 +54,102 @@ class Recommend(object):
         pickle.dump(clf,output)
         output.close()
 
+def run(k=3):
+    print(k)
+    recommend = Recommend()
+    while True:
+        recommend.clustering(k)
+
+def loop():
+    list_k=[4,5,6,7,8]
+    run_list=[]
+    p = multiprocessing.Pool()
+    for k in list_k:
+        p.apply_async(run(k),args=(k))
+    p.close()
+    p.join()
+
+def Silhouette(mk):
+    label = mk._labels
+    labels={}
+    for i in range(mk._k):
+        labels.setdefault(i+1,{})
+        value = np.nonzero(label == i + 1)[0]
+        labels[i+1]=value
+    siAll=0
+    for i in range(len(mk._labels)):
+        si=getSi(labels,i)
+        siAll=siAll+si
+    Sil=siAll/len(mk._labels)
+    print(Sil)
+    return Sil
+
+
+def getAi(labels,i):
+    label=[]
+    for key,item in labels.items():
+        if i in item:
+            label=item
+            break
+    if i not in label:
+        return -1
+    mydb = MyDB()
+    dsAll=0
+    for index in label:
+        distance = mydb.getSimById(i+1, index+1)
+        if not distance:
+            movie1 = Movie().getMovieById(i+1)
+            movie2 = Movie().getMovieById(index+1)
+            distance = distMovie(movie1, movie2)
+            mydb.insertDistance(i+1, index+1, distance)
+        dsAll=dsAll+distance
+    mydb.db.commit()
+    mydb.db.close()
+    ai=dsAll/len(label)
+    return ai
+
+
+def getBi(labels,i):
+    ds=[]
+    mydb = MyDB()
+    for key, item in labels.items():
+        if i in item:
+            continue
+        dsAll=0
+        for index in item:
+            distance = mydb.getSimById(i + 1, index + 1)
+            if not distance:
+                movie1 = Movie().getMovieById(i + 1)
+                movie2 = Movie().getMovieById(index + 1)
+                distance = distMovie(movie1, movie2)
+                mydb.insertDistance(i+1, index+1, distance)
+            dsAll = dsAll + distance
+        ds.append(dsAll)
+    mydb.db.commit()
+    mydb.db.close()
+    bi=min(ds)
+    return bi
+
+def getSi(labels,i):
+    ai=getAi(labels,i)
+    print('ai: %s'%ai)
+    bi=getBi(labels,i)
+    print('bi: %s'%bi)
+    si=(bi-ai)/max([ai,bi])
+    print('si: %s'%si)
+    return si
+
 if __name__=='__main__':
-    input = open("clf1000_3.pkl", 'rb')
+    #loop()
+    pkl="clf1000_3.pkl"
+    input = open(pkl, 'rb')
     mk = pickle.load(input)
     input.close()
-    print(mk._sse)
+    sil=Silhouette(mk)
+    mk._sil=sil
+    output = open(pkl, 'wb')
+    pickle.dump(mk, output)
+    output.close()
     # while(True):
     #     t1=time.time()
     #     recommend=Recommend()

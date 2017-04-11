@@ -9,6 +9,7 @@ import numpy as np
 import random
 from  DB import MyDB
 from Movie import Movie
+from function import distMovie
 
 class KMeansClassifier():
     "this is a k-means classifier"
@@ -21,21 +22,6 @@ class KMeansClassifier():
         self._clusterAssment = None
         self._labels = None
         self._sse = None
-
-    def distMovie(self, x, y):
-        if isinstance(x, Movie) and isinstance(y, Movie):
-            listX = x.getList()
-            listY = y.getList()
-            ds = 0
-            for i in range(len(listX)):
-                ar1=np.array(listX[i])
-                ar2=np.array(listY[i])
-                d = self.dist(ar1,ar2)
-                ds += d
-            return ds
-
-    def dist(self, vect1, vect2):
-        return np.sqrt(np.sum(np.square(vect1 - vect2)))
 
     def _calEDist(self, arrA, arrB):
         """
@@ -87,11 +73,11 @@ class KMeansClassifier():
                 minIndex = -1  # 将最近质心的下标置为-1
                 movie1 = Movie().getMovieById(i)
                 for j in range(self._k):  # 次迭代用于寻找最近的质心
-                    print("%d,%d"%(i,self._centroids[j]))
+      #              print("%d,%d"%(i,self._centroids[j]))
                     distance=mydb.getSimById(i,self._centroids[j])
                     if not distance:
                         movie2=Movie().getMovieById(self._centroids[j])
-                        distance=self.distMovie(movie1,movie2)
+                        distance=distMovie(movie1,movie2)
                         mydb.insertDistance(i,self._centroids[j],distance)
                     distJI = distance
                     if distJI < minDist:
