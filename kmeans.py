@@ -166,7 +166,7 @@ class KMeansClassifier():
             s=''
             for item in self._centroids:
                 s=s+'  '+str(item)
-            logger.info('第%s次聚类迭代得到中心点:'+s)
+            logger.info('第%s次聚类迭代得到中心点:'%(_+1)+s)
             logger.info('SSE: %s'%self._sse)
             print('中心点:')
             print(self._centroids)

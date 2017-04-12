@@ -70,7 +70,7 @@ if __name__=='__main__':
     while(True):
         t1=time.time()
         recommend=Recommend()
-        recommend.clustering(4)
+        recommend.clustering(5)
         t2=time.time()
         print(t2-t1)
 

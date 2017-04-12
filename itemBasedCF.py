@@ -57,16 +57,17 @@ class ItemBasedCF:
                 rank[j] += score * wj
                 length.setdefault(j,0)
                 length[j]=length[j]+wj
-        print(rank)
-        print(length)
         for item,score in rank.items():
             rank[item]=rank[item]/length[item]
-        print(rank)
                 # rank[i] += wuv * rvi
                 # rank[I] = rank[I] / sim_sum
         res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[0:N])
         return res
 
+    def rmse(self):
+        for user, items in self.test.items():
+            res=self.Recommend(user)
+        pass
     # 召回率和准确率
     def RecallAndPrecision(self, train=None, test=None, K=3, N=10):
         train = train or self.train

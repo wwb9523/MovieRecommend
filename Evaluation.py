@@ -75,8 +75,7 @@ def getSi(labels,i):
     print('si: %s'%si)
     return si
 
-if __name__=='__main__':
-    file=sys.argv[1]
+def silPkl(file):
     if not os.path.exists(file):
         print('file not exists !')
     if not file.endswith('pkl'):
@@ -84,8 +83,17 @@ if __name__=='__main__':
     input = open(file, 'rb')
     mk = pickle.load(input)
     input.close()
-    sil = Silhouette(mk)
-    mk._sil = sil
-    output = open(file, 'wb')
-    pickle.dump(mk, output)
-    output.close()
+    if mk._sil:
+        print('sil is exists!')
+        return -1
+    else:
+        sil = Silhouette(mk)
+        mk._sil = sil
+        output = open(file, 'wb')
+        pickle.dump(mk, output)
+        output.close()
+
+if __name__=='__main__':
+    file=sys.argv[1]
+    silPkl(file)
+

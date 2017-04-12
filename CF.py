@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from DB import MyDB
 from sklearn import cross_validation as cv
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.metrics import mean_squared_error
@@ -24,6 +25,8 @@ def predict(ratings, similarity, type='user'):
 
 header = ['user_id', 'item_id', 'rating', 'timestamp']
 df = pd.read_csv('ml-100k/u.data', sep='\t', names=header)
+mydb=MyDB()
+d=pd.read_sql_query('select user_id,item_id,rating from udata',mydb.db)
 train_data, test_data = cv.train_test_split(df, test_size=0.25)
 
 n_users = df.user_id.unique().shape[0]
