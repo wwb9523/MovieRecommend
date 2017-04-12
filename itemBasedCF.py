@@ -3,14 +3,13 @@ import math
 from DB import MyDB
 
 class ItemBasedCF:
-    def __init__(self,train_file,test_file):
-        self.train_file = train_file
-        self.test_file = test_file
+    def __init__(self):
         self.readData()
 
     def readData(self):
         mydb=MyDB()
         res=mydb.getAllScore()
+        mydb.db.close()
         ce=int(len(res)*3/4)
         #读取文件，并生成用户-物品的评分表和测试集
         self.train = dict()     #用户-物品的评分表
@@ -48,16 +47,25 @@ class ItemBasedCF:
     #给用户user推荐，前K个相关用户
     def Recommend(self,user,K=3,N=10):
         rank = dict()
-        action_item = self.train[user]     #用户user产生过行为的item和评分
+        action_item = self.train[user] #用户user产生过行为的item和评分
+        length=dict()
         for item,score in action_item.items():
             for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True)[0:K]:
                 if j in action_item.keys():
                     continue
                 rank.setdefault(j,0)
                 rank[j] += score * wj
+                length.setdefault(j,0)
+                length[j]=length[j]+wj
+        print(rank)
+        print(length)
+        for item,score in rank.items():
+            rank[item]=rank[item]/length[item]
+        print(rank)
                 # rank[i] += wuv * rvi
                 # rank[I] = rank[I] / sim_sum
-        return dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[0:N])
+        res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[0:N])
+        return res
 
     # 召回率和准确率
     def RecallAndPrecision(self, train=None, test=None, K=3, N=10):
@@ -111,7 +119,7 @@ class ItemBasedCF:
         return ret
 
 if __name__=='__main__':
-    itemBasedCF=ItemBasedCF('train.data','test.data')
+    itemBasedCF=ItemBasedCF()
     itemBasedCF.ItemSimilarity()
     print(itemBasedCF.Recommend(6))
     # print(itemBasedCF.RecallAndPrecision())

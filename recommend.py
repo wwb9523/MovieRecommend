@@ -39,13 +39,11 @@ class Recommend(object):
         clf.fit_sim(movIndex)
        # print(clf._labels)
       #  print(clf._centroids)
-        print(clf._sse)
-        pkl="clf"+str(limit)+"_"+str(k)+'_'+str(clf._sse)+".pkl"
+        pkl="pkl/clf"+str(limit)+"_"+str(k)+'_'+str(clf._sse)+".pkl"
         if os.path.exists(pkl):
             input=open(pkl,'rb')
             mk=pickle.load(input)
             input.close()
-            print(mk._sse)
             if mk._sse<clf._sse:
                 print("return")
                 return

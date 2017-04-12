@@ -240,3 +240,8 @@ class MyDB(object):
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
         return res
+
+    def insertUser(self,userName,userPassword,email,realName):
+        sql='insert into user(user_name,user_password,email,real_name) values("%s","%s","%s","%s")'%(pymysql.escape_string(userName),pymysql.escape_string(userPassword),pymysql.escape_string(email),pymysql.escape_string(realName))
+        return  self.cursor.execute(sql)
+

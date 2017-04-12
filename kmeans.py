@@ -11,6 +11,22 @@ from  DB import MyDB
 from Movie import Movie
 from function import distMovie
 import time
+import logging
+
+logger = logging.getLogger('KMeans')
+logger.setLevel(logging.INFO)
+
+# create file handler
+log_path = "./log.log"
+fh = logging.FileHandler(log_path)
+fh.setLevel(logging.INFO)
+# create formatter
+fmt = "%(asctime)-15s %(levelname)s %(filename)s %(lineno)d %(process)d %(message)s"
+datefmt = "%a %d %b %Y %H:%M:%S"
+formatter = logging.Formatter(fmt, datefmt)
+# add handler and formatter to logger
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 class KMeansClassifier():
     "this is a k-means classifier"
@@ -82,11 +98,17 @@ class KMeansClassifier():
         self._clusterAssment[:,2]=movIndex
         self._centroids=[]
         while len(self._centroids)<self._k:
-            c=random.randint(movIndex[0],movIndex[m-1])
+            c=random.randint(0,m-1)
             if c not in self._centroids:
                 self.movie_all.append(Movie())
                 self.movie_num.append(0)
-                self._centroids.append(c)
+                self._centroids.append(movIndex[c])
+        logger.info('数据量：%s'%m)
+        logger.info('K值: %s'%self._k)
+        s = ''
+        for item in self._centroids:
+            s = s + '  ' + str(item)
+        logger.info('初始化中心点:' + s)
         t1=time.time()
         for _ in range(self._max_iter):
             start=time.time()
@@ -96,7 +118,7 @@ class KMeansClassifier():
                 minIndex = -1  # 将最近质心的下标置为-1
                 movie1 = Movie().getMovieById(i)
                 for j in range(self._k):  # 次迭代用于寻找最近的质心
-                    print("%d,%d"%(i,self._centroids[j]))
+                  #  print("%d,%d"%(i,self._centroids[j]))
                     #distance=mydb.getSimById(i,self._centroids[j])
                     distance=mvAll.get(i).get(self._centroids[j])
                     if not distance:
@@ -120,6 +142,7 @@ class KMeansClassifier():
             if not clusterChanged:  # 若所有样本点所属的族都不改变,则已收敛,结束迭代
                 t2=time.time()
                 self.time=t2-t1
+                logger.info('共耗时：%s'%(t2-t1))
                 print('共耗时：%s'%(t2-t1))
                 break
             for i in range(self._k):  # 更新质心，将每个族中的点的均值作为质心
@@ -138,7 +161,13 @@ class KMeansClassifier():
             self._labels = self._clusterAssment[:, 0]
             self._sse = sum(self._clusterAssment[:, 1])
             end=time.time()
-            print('第%s次聚类迭代耗时：%s'%(_,end-start))
+            logger.info('第%s次聚类迭代耗时：%s'%(_+1,end-start))
+            print('第%s次聚类迭代耗时：%s'%(_+1,end-start))
+            s=''
+            for item in self._centroids:
+                s=s+'  '+str(item)
+            logger.info('第%s次聚类迭代得到中心点:'+s)
+            logger.info('SSE: %s'%self._sse)
             print('中心点:')
             print(self._centroids)
             print('SSE: %s'%self._sse)

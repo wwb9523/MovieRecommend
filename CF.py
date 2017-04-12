@@ -23,7 +23,7 @@ def predict(ratings, similarity, type='user'):
     return pred
 
 header = ['user_id', 'item_id', 'rating', 'timestamp']
-df = pd.read_csv('ml-100k/train.data', sep='\t', names=header)
+df = pd.read_csv('ml-100k/u.data', sep='\t', names=header)
 train_data, test_data = cv.train_test_split(df, test_size=0.25)
 
 n_users = df.user_id.unique().shape[0]
