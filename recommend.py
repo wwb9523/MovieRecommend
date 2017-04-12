@@ -37,8 +37,8 @@ class Recommend(object):
         movIndex=mydb.getMovieIndex(limit)
         clf = KMeansClassifier(k)
         clf.fit_sim(movIndex)
-        print(clf._labels)
-        print(clf._centroids)
+       # print(clf._labels)
+      #  print(clf._centroids)
         print(clf._sse)
         pkl="clf"+str(limit)+"_"+str(k)+'_'+str(clf._sse)+".pkl"
         if os.path.exists(pkl):
@@ -68,11 +68,11 @@ def loop():
     p.join()
 
 if __name__=='__main__':
-    loop()
-    # while(True):
-    #     t1=time.time()
-    #     recommend=Recommend()
-    #     recommend.clustering()
-    #     t2=time.time()
-    #     print(t2-t1)
+    #loop()
+    while(True):
+        t1=time.time()
+        recommend=Recommend()
+        recommend.clustering(4)
+        t2=time.time()
+        print(t2-t1)
 

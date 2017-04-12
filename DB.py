@@ -228,3 +228,15 @@ class MyDB(object):
     def insertUData(self,userId,itemId,rating,item):
         sql='insert into udata(user_id,item_id,rating,movieLens_id) values(%s,%s,%s,%s)'%(userId,itemId,rating,item)
         return self.cursor.execute(sql)
+
+    def getAllMovie(self):
+        sql='select movId1,movId2,distance from sim_mov'
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res
+
+    def getAllScore(self):
+        sql='select user_id,item_id,rating from udata'
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res

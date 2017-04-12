@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from DB import MyDB
 
 class ItemBasedCF:
     def __init__(self,train_file,test_file):
@@ -8,17 +9,18 @@ class ItemBasedCF:
         self.readData()
 
     def readData(self):
+        mydb=MyDB()
+        res=mydb.getAllScore()
+        ce=int(len(res)*3/4)
         #读取文件，并生成用户-物品的评分表和测试集
         self.train = dict()     #用户-物品的评分表
-        for line in open(self.train_file):
-            # user,item,score = line.strip().split(",")
-            user,item,score,_ = line.strip().split("\t")
+        for line in res[:ce]:
+            user,item,score = line
             self.train.setdefault(user,{})
             self.train[user][item] = int(score)
         self.test = dict()      #测试集
-        for line in open(self.test_file):
-            # user,item,score = line.strip().split(",")
-            user,item,score,_ = line.strip().split("\t")
+        for line in res[ce:]:
+            user,item,score = line
             self.test.setdefault(user,{})
             self.test[user][item] = int(score)
 

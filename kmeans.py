@@ -23,6 +23,7 @@ class KMeansClassifier():
         self._clusterAssment = None
         self._labels = None
         self._sse = None
+        self.time=None
 
     def _calEDist(self, arrA, arrB):
         """
@@ -53,8 +54,27 @@ class KMeansClassifier():
             centroids[:, j] = (minJ + rangeJ * np.random.rand(k, 1)).flatten()
         return centroids 
 
+    def getAllRel(self):
+        mydb = MyDB()
+        mv={}
+        res=mydb.getAllMovie()
+        mydb.db.close()
+        for row in res:
+            movId1=row[0]
+            movId2=row[1]
+            distance=row[2]
+            item=mv.get(movId1)
+            if item:
+                if not item.get(movId2):
+                    mv[movId1][movId2] = distance
+            else:
+                mv.setdefault(movId1,{})
+                mv[movId1][movId2]=distance
+        return mv
+
     def fit_sim(self,movIndex):
         mydb=MyDB()
+        mvAll=self.getAllRel()
         self.movie_all=[]
         self.movie_num=[]
         m=len(movIndex)
@@ -76,12 +96,14 @@ class KMeansClassifier():
                 minIndex = -1  # 将最近质心的下标置为-1
                 movie1 = Movie().getMovieById(i)
                 for j in range(self._k):  # 次迭代用于寻找最近的质心
-      #              print("%d,%d"%(i,self._centroids[j]))
-                    distance=mydb.getSimById(i,self._centroids[j])
+                    print("%d,%d"%(i,self._centroids[j]))
+                    #distance=mydb.getSimById(i,self._centroids[j])
+                    distance=mvAll.get(i).get(self._centroids[j])
                     if not distance:
                         movie2=Movie().getMovieById(self._centroids[j])
                         distance=distMovie(movie1,movie2)
                         mydb.insertDistance(i,self._centroids[j],distance)
+                        mvAll[i][self._centroids[j]]=distance
                     distJI = distance
                     if distJI < minDist:
                         minDist = distJI
@@ -97,6 +119,7 @@ class KMeansClassifier():
                     self._clusterAssment[iindex, :2] = minIndex, minDist ** 2
             if not clusterChanged:  # 若所有样本点所属的族都不改变,则已收敛,结束迭代
                 t2=time.time()
+                self.time=t2-t1
                 print('共耗时：%s'%(t2-t1))
                 break
             for i in range(self._k):  # 更新质心，将每个族中的点的均值作为质心
@@ -269,7 +292,5 @@ class biKMeansClassifier():
 
 if __name__=='__main__':
     km=KMeansClassifier()
-    m1=Movie().getMovieById(1)
-    m2=Movie(). getMovieById(100)
-    dis=distMovie(m1,m2)
-    print(dis)
+    rs=km.getAllRel()
+    print(rs)
