@@ -131,7 +131,7 @@ class MyDB(object):
         else:
             m2,m1=movId1,movId2
         if not self.selectDistance(m1,m2):
-            #print('insert distance %s,%s,%s' % (m1, m2,distance))
+            print('insert distance %s,%s,%s' % (m1, m2,distance))
             sql='insert into sim_mov(movId1,movId2,distance) VALUES(%s,%s,%s)'%(m1,m2,distance)
             return self.cursor.execute(sql)
         else:
@@ -244,4 +244,11 @@ class MyDB(object):
     def insertUser(self,userName,userPassword,email,realName):
         sql='insert into user(user_name,user_password,email,real_name) values("%s","%s","%s","%s")'%(pymysql.escape_string(userName),pymysql.escape_string(userPassword),pymysql.escape_string(email),pymysql.escape_string(realName))
         return  self.cursor.execute(sql)
+
+    def getMinDistance(self,movId1,limit=100):
+        #sql='SELECT movId2,distance FROM sim_mov WHERE  distance=(SELECT MIN(distance) FROM sim_mov WHERE (movId1=%s or movId2=%s) AND movId2 != movId1)'%(movId1,movId1)
+        sql='SELECT * FROM sim_mov WHERE movId1 != movId2 AND (movId1=%s OR movId2=%s) ORDER BY distance ASC limit %s'%(movId1,movId1,limit)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res[0]
 

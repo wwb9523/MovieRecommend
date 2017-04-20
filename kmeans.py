@@ -39,6 +39,7 @@ class KMeansClassifier():
         self._clusterAssment = None
         self._labels = None
         self._sse = None
+        self._sil=None
         self.time=None
 
     def _calEDist(self, arrA, arrB):

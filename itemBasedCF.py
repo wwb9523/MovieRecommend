@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from DB import MyDB
+import math,pickle
 
 class ItemBasedCF:
     def __init__(self):
@@ -45,12 +46,19 @@ class ItemBasedCF:
         return self.W
 
     #给用户user推荐，前K个相关用户
-    def Recommend(self,user,K=3,N=10):
+    def Recommend(self,user,K=3,N=10,pkl='pkl/clf1000_4_11309989.1559.pkl'):
+        mydb = MyDB()
+        input = open(pkl, 'rb')
+        mk = pickle.load(input)
+        input.close()
+        label = mk._labels
+        bl=1
         rank = dict()
         action_item = self.train[user] #用户user产生过行为的item和评分
         length=dict()
         for item,score in action_item.items():
-            for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True)[0:K]:
+            movId2,minDis=mydb.getMinDistance(item)
+            for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True):
                 if j in action_item.keys():
                     continue
                 rank.setdefault(j,0)
@@ -59,15 +67,21 @@ class ItemBasedCF:
                 length[j]=length[j]+wj
         for item,score in rank.items():
             rank[item]=rank[item]/length[item]
-                # rank[i] += wuv * rvi
-                # rank[I] = rank[I] / sim_sum
-        res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[0:N])
+        res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True))
         return res
 
     def rmse(self):
-        for user, items in self.test.items():
-            res=self.Recommend(user)
-        pass
+        n=m=0
+        for user in self.test.keys():
+            rank=self.Recommend(user)
+            for i,score in rank.items():
+                if i in self.test[user]:
+                    x=self.test[user][i]-score
+                    m=m+math.pow(x,2)
+                    n=n+1
+        res=math.sqrt(m/n)
+        return res
+
     # 召回率和准确率
     def RecallAndPrecision(self, train=None, test=None, K=3, N=10):
         train = train or self.train
@@ -120,8 +134,11 @@ class ItemBasedCF:
         return ret
 
 if __name__=='__main__':
+    #pkl='pkl/clf1000_4_11309989.1559.pkl'
+
     itemBasedCF=ItemBasedCF()
     itemBasedCF.ItemSimilarity()
+    print(itemBasedCF.rmse())
     print(itemBasedCF.Recommend(6))
     # print(itemBasedCF.RecallAndPrecision())
     # print(itemBasedCF.Coverage())

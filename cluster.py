@@ -7,7 +7,7 @@ import pickle
 import os,time
 
 
-class Recommend(object):
+class Cluster(object):
     def __init__(self,k=3, initCent='random', max_iter=500):
         self._k = k
         self._initCent = initCent
@@ -29,6 +29,21 @@ class Recommend(object):
 
     def dist(self,vect1,vect2):
         return np.sqrt(np.sum(np.square(vect1 - vect2)))
+
+
+    def recommend(self,item,k,pkl='pkl/clf1000_4_11309989.1559.pkl'):
+        mydb=MyDB()
+        input = open(pkl, 'rb')
+        mk = pickle.load(input)
+        input.close()
+        label = mk._labels
+        item_label=np.nonzero(label==label[item-1])
+        items=mydb.getMinDistance(item,100)
+        recom_items=[]
+        for movId1,movId2,distance in items:
+            recom_item=lambda x: movId1 if movId2==item else movId2
+            recom_items.append(recom_item)
+
 
     def clustering(self,k=3):
         print(k)
@@ -54,8 +69,8 @@ class Recommend(object):
 
 def run(k=3):
     print(k)
-    recommend = Recommend()
-    recommend.clustering(k)
+    cluster = Cluster()
+    cluster.clustering(k)
 
 def loop():
     list_k=[4,5,6,7,8]
@@ -69,8 +84,8 @@ if __name__=='__main__':
     #loop()
     while(True):
         t1=time.time()
-        recommend=Recommend()
-        recommend.clustering(5)
+        cluster=Cluster()
+        cluster.clustering(5)
         t2=time.time()
         print(t2-t1)
 

@@ -2,8 +2,10 @@ import sys,os
 from Movie import Movie
 from DB import MyDB
 import numpy as np
-from function import distMovie
-import pickle
+from function import distMovie,getAllRel
+import pickle,time
+
+sim=getAllRel()
 
 def Silhouette(mk):
     label = mk._labels
@@ -23,46 +25,52 @@ def Silhouette(mk):
 
 def getAi(labels,i):
     label=[]
+    global sim
     for key,item in labels.items():
         if i in item:
             label=item
             break
     if i not in label:
         return -1
-    mydb = MyDB()
     dsAll=0
     for index in label:
-        distance = mydb.getSimById(i+1, index+1)
+        distance = sim.get(min(i+1,index+1)).get(max(i+1, index+1))
         if not distance:
+            mydb = MyDB()
             movie1 = Movie().getMovieById(i+1)
             movie2 = Movie().getMovieById(index+1)
             distance = distMovie(movie1, movie2)
             mydb.insertDistance(i+1, index+1, distance)
+            mydb.db.commit()
+            mydb.db.close()
         dsAll=dsAll+distance
-    mydb.db.commit()
-    mydb.db.close()
     ai=dsAll/len(label)
     return ai
 
 
 def getBi(labels,i):
     ds=[]
-    mydb = MyDB()
+    global sim
     for key, item in labels.items():
         if i in item:
             continue
         dsAll=0
         for index in item:
-            distance = mydb.getSimById(i + 1, index + 1)
+            movId1=min(i + 1, index+1)
+            movId2=max(i + 1, index + 1)
+            distance = sim.get(movId1).get(movId2)
             if not distance:
-                movie1 = Movie().getMovieById(i + 1)
-                movie2 = Movie().getMovieById(index + 1)
+                mydb = MyDB()
+                movie1 = Movie().getMovieById(movId1)
+                movie2 = Movie().getMovieById(movId2)
                 distance = distMovie(movie1, movie2)
-                mydb.insertDistance(i+1, index+1, distance)
+                mydb.insertDistance(movId1, movId2, distance)
+                sim.setdefault(movId1, {})
+                sim[movId1][movId2] = distance
+                mydb.db.commit()
+                mydb.db.close()
             dsAll = dsAll + distance
         ds.append(dsAll)
-    mydb.db.commit()
-    mydb.db.close()
     bi=min(ds)
     return bi
 
@@ -83,17 +91,22 @@ def silPkl(file):
     input = open(file, 'rb')
     mk = pickle.load(input)
     input.close()
-    if mk._sil:
+    if hasattr(mk,'_sil') and mk._sil:
         print('sil is exists!')
         return -1
     else:
         sil = Silhouette(mk)
         mk._sil = sil
-        output = open(file, 'wb')
+        index=file.rfind('.')
+        new_file=file[:index]+'_'+str(sil)+file[index:]
+        output = open(new_file, 'wb')
         pickle.dump(mk, output)
         output.close()
 
 if __name__=='__main__':
-    file=sys.argv[1]
+    time1=time.time()
+    file='pkl/clf1000_5_12434580.0478.pkl'
     silPkl(file)
+    time2=time.time()
+    print('total time: '+str(time2-time1))
 
