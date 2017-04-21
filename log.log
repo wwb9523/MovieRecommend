@@ -107,3 +107,15 @@ Fri 14 Apr 2017 17:19:25 INFO kmeans.py 145 820 共耗时：3024.3730001449585
 Fri 14 Apr 2017 17:19:28 INFO kmeans.py 106 820 数据量：1000
 Fri 14 Apr 2017 17:19:28 INFO kmeans.py 107 820 K值: 5
 Fri 14 Apr 2017 17:19:28 INFO kmeans.py 111 820 初始化中心点:  82  766  101  74  632
+Fri 21 Apr 2017 15:50:45 INFO kmeans.py 107 8488 数据量：2000
+Fri 21 Apr 2017 15:50:45 INFO kmeans.py 108 8488 K值: 5
+Fri 21 Apr 2017 15:50:45 INFO kmeans.py 112 8488 初始化中心点:  1201  1510  1066  125  624
+Fri 21 Apr 2017 16:24:42 INFO kmeans.py 107 11248 数据量：2000
+Fri 21 Apr 2017 16:24:42 INFO kmeans.py 108 11248 K值: 5
+Fri 21 Apr 2017 16:24:42 INFO kmeans.py 112 11248 初始化中心点:  478  54  274  1719  370
+Fri 21 Apr 2017 16:26:40 INFO kmeans.py 107 6604 数据量：2000
+Fri 21 Apr 2017 16:26:40 INFO kmeans.py 108 6604 K值: 5
+Fri 21 Apr 2017 16:26:40 INFO kmeans.py 112 6604 初始化中心点:  178  137  688  1242  648
+Fri 21 Apr 2017 16:52:04 INFO kmeans.py 107 2868 数据量：2000
+Fri 21 Apr 2017 16:52:04 INFO kmeans.py 108 2868 K值: 5
+Fri 21 Apr 2017 16:52:04 INFO kmeans.py 112 2868 初始化中心点:  1574  571  1272  1872  1404

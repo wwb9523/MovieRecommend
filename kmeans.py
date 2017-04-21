@@ -121,11 +121,14 @@ class KMeansClassifier():
                 for j in range(self._k):  # 次迭代用于寻找最近的质心
                   #  print("%d,%d"%(i,self._centroids[j]))
                     #distance=mydb.getSimById(i,self._centroids[j])
-                    distance=mvAll.get(i).get(self._centroids[j])
+                    distance=mvAll.get(i)
+                    if distance:
+                        distance =distance.get(self._centroids[j])
                     if not distance:
                         movie2=Movie().getMovieById(self._centroids[j])
                         distance=distMovie(movie1,movie2)
                         mydb.insertDistance(i,self._centroids[j],distance)
+                        mvAll.setdefault(i,{})
                         mvAll[i][self._centroids[j]]=distance
                     distJI = distance
                     if distJI < minDist:

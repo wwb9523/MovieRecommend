@@ -45,10 +45,9 @@ class Cluster(object):
             recom_items.append(recom_item)
 
 
-    def clustering(self,k=3):
+    def clustering(self,k=3,limit=1000):
         print(k)
         mydb=MyDB()
-        limit=1000
         movIndex=mydb.getMovieIndex(limit)
         clf = KMeansClassifier(k)
         clf.fit_sim(movIndex)
@@ -85,7 +84,7 @@ if __name__=='__main__':
     while(True):
         t1=time.time()
         cluster=Cluster()
-        cluster.clustering(5)
+        cluster.clustering(5,2000)
         t2=time.time()
         print(t2-t1)
 

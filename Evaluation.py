@@ -105,7 +105,7 @@ def silPkl(file):
 
 if __name__=='__main__':
     time1=time.time()
-    file='pkl/clf1000_5_12434580.0478.pkl'
+    file='pkl/clf1000_4_11777520.3389.pkl'
     silPkl(file)
     time2=time.time()
     print('total time: '+str(time2-time1))
