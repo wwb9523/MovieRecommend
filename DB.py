@@ -247,8 +247,8 @@ class MyDB(object):
 
     def getMinDistance(self,movId1,limit=100):
         #sql='SELECT movId2,distance FROM sim_mov WHERE  distance=(SELECT MIN(distance) FROM sim_mov WHERE (movId1=%s or movId2=%s) AND movId2 != movId1)'%(movId1,movId1)
-        sql='SELECT * FROM sim_mov WHERE movId1 != movId2 AND (movId1=%s OR movId2=%s) ORDER BY distance ASC limit %s'%(movId1,movId1,limit)
+        sql='SELECT movId1,movId2,distance FROM sim_mov WHERE movId1 != movId2 AND (movId1=%s OR movId2=%s) ORDER BY distance ASC limit %s'%(movId1,movId1,limit)
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
-        return res[0]
+        return res
 

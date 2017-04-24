@@ -2,6 +2,7 @@ import numpy as np
 import math
 from DB import MyDB
 import math,pickle
+from cluster import Cluster
 
 class ItemBasedCF:
     def __init__(self):
@@ -46,20 +47,19 @@ class ItemBasedCF:
         return self.W
 
     #给用户user推荐，前K个相关用户
-    def Recommend(self,user,K=3,N=10,pkl='pkl/clf1000_4_11309989.1559.pkl'):
-        mydb = MyDB()
-        input = open(pkl, 'rb')
-        mk = pickle.load(input)
-        input.close()
-        label = mk._labels
-        bl=1
+    def Recommend(self,user,K=100,N=30):
+        cluster=Cluster()
         rank = dict()
         action_item = self.train[user] #用户user产生过行为的item和评分
         length=dict()
         for item,score in action_item.items():
-            movId2,minDis=mydb.getMinDistance(item)
-            for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True):
+            if item > 1000:
+                continue
+            cluster_recom = cluster.recommend(item, 10)
+            for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True)[:100]:
                 if j in action_item.keys():
+                    continue
+                if j not in cluster_recom:
                     continue
                 rank.setdefault(j,0)
                 rank[j] += score * wj
@@ -67,7 +67,7 @@ class ItemBasedCF:
                 length[j]=length[j]+wj
         for item,score in rank.items():
             rank[item]=rank[item]/length[item]
-        res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True))
+        res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[:30])
         return res
 
     def rmse(self):
@@ -135,10 +135,9 @@ class ItemBasedCF:
 
 if __name__=='__main__':
     #pkl='pkl/clf1000_4_11309989.1559.pkl'
-
     itemBasedCF=ItemBasedCF()
     itemBasedCF.ItemSimilarity()
-    print(itemBasedCF.rmse())
+    #print(itemBasedCF.rmse())
     print(itemBasedCF.Recommend(6))
     # print(itemBasedCF.RecallAndPrecision())
     # print(itemBasedCF.Coverage())

@@ -37,12 +37,15 @@ class Cluster(object):
         mk = pickle.load(input)
         input.close()
         label = mk._labels
-        item_label=np.nonzero(label==label[item-1])
-        items=mydb.getMinDistance(item,100)
+        item_label=np.nonzero(label==label[item-1])[0]+1
+        items=mydb.getMinDistance(item,k)
         recom_items=[]
         for movId1,movId2,distance in items:
-            recom_item=lambda x: movId1 if movId2==item else movId2
-            recom_items.append(recom_item)
+            ritem=lambda x,y: x if y==item else y
+            recom_item=ritem(movId1,movId2)
+            if recom_item in item_label:
+                recom_items.append(recom_item)
+        return recom_items
 
 
     def clustering(self,k=3,limit=1000):
@@ -80,11 +83,13 @@ def loop():
     p.join()
 
 if __name__=='__main__':
+    cluster = Cluster()
+    cluster.recommend(5,3)
     #loop()
-    while(True):
-        t1=time.time()
-        cluster=Cluster()
-        cluster.clustering(5,2000)
-        t2=time.time()
-        print(t2-t1)
+    # while(True):
+    #     t1=time.time()
+    #     cluster=Cluster()
+    #     cluster.clustering(5,2000)
+    #     t2=time.time()
+    #     print(t2-t1)
 
