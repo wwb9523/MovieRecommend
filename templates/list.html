@@ -81,8 +81,8 @@
         <li>
             <div class="subject">
                 <div class="mov_name">
-                <span property="v:itemreviewed">{{ item['title'] }}</span>
-                <span class="year">{{ item['year'] }}</span>
+                <span property="v:itemreviewed">{{ subject['title'] }}</span>
+                <span class="year">{{ subject['year'] }}</span>
             </div>
                 <div  class="mainpic">
                     <a class="nbgnbg" href="#" title="点击看更多海报">
@@ -99,7 +99,6 @@
                             {% endfor %}
                         </span>
                     </span>
-                <br/>
                     <span class="info_list">
                         <span class="pl">编剧</span>:
                         <span class="attrs">
@@ -109,7 +108,6 @@
                                 {% endfor %}
                         </span>
                     </span>
-                <br/>
                 <span class="actor"><span class='pl'>主演</span>:
                     <span class='attrs'>
                         {% for item in subject['cast'] %}
@@ -118,14 +116,12 @@
                         {% endfor %}
                     </span>
                 </span>
-                <br/>
                 <span class="pl">类型:</span>
                 {% for item in subject['genres'] %}
                     <span property="v:genre">{{ item }}
                     {% if item!=subject['genres'][-1] %} / {% endif %}
                 </span>
                     {% endfor %}
-                <br/>
 
                 </div>
                 <div class="clearfix"></div>
