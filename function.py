@@ -36,3 +36,10 @@ def getAllRel():
             mv.setdefault(movId1, {})
             mv[movId1][movId2] = distance
     return mv
+
+if __name__=='__main__':
+    mydb=MyDB()
+    res=mydb.getMovInfo(3)
+
+
+

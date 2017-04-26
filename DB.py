@@ -15,6 +15,91 @@ class MyDB(object):
             )
         self.cursor=self.db.cursor()
 
+    def getUser(self,username):
+        if not username:
+            return None
+        sql='select id,real_name,user_password from user where user_name="%s"'%pymysql.escape_string(username)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        if res:
+            return res[0]
+        return None
+
+    def getPersonById(self,ids):
+        if not ids:
+            return []
+       # ids=tuple(ids)
+        sql="select name from person where id in (%s)"
+        in_p = ', '.join(map(lambda x: str(x), ids))
+        sql=sql % (in_p)
+        try:
+            self.cursor.execute(sql)
+            res = self.cursor.fetchall()
+        except:
+           print(sql)
+           return []
+        result=[]
+        for item in res:
+            result.append(item[0])
+        return result
+
+    def getLanguageById(self,ids):
+        sql = "select name from language where id in (%s)"
+        in_p = ', '.join(map(lambda x: str(x), ids))
+        sql = sql % (in_p)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        result = []
+        for item in res:
+            result.append(item[0])
+        return result
+
+    def getGenresById(self,ids):
+        sql = "select name from genres where id in (%s)"
+        in_p = ', '.join(map(lambda x: str(x), ids))
+        sql = sql % (in_p)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        result = []
+        for item in res:
+            result.append(item[0])
+        return result
+
+    def getCountryById(self,ids):
+        sql = "select name from countries where id in (%s)"
+        in_p = ', '.join(map(lambda x: str(x), ids))
+        sql = sql % (in_p)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        result = []
+        for item in res:
+            result.append(item[0])
+        return result
+
+    def getMovInfo(self,id):
+        sql='select id,title,aka,year,length from movie where id=%s'%id
+        self.cursor.execute(sql)
+        movies = self.cursor.fetchall()
+        if  len(movies)>0:
+            movie=movies[0]
+            info = {'cast': '', 'country': '', 'directory': '', 'genres': '', 'language': '', 'writer': '','title':movie[1],'aka':movie}
+            id=movie[0]
+            print(id)
+            castIds=list(map(lambda x:x[0],self.getCastRela(id)))
+            countries=list(map(lambda x:x[0],self.getCountryRela(id)))
+            direct=list(map(lambda x:x[0],self.getDirectorsRela(id)))
+            genres=list(map(lambda x:x[0],self.getGenresRela(id)))
+            lang=list(map(lambda x:x[0],self.getLanguageRela(id)))
+            writer=list(map(lambda x:x[0],self.getWriterRela(id)))
+            info['cast'] = self.getPersonById(castIds)
+            info['country']=self.getCountryById(countries)
+            info['directory'] = self.getPersonById(direct)
+            info['genres'] = self.getGenresById(genres)
+            info['language'] = self.getLanguageById(lang)
+            info['writer'] = self.getPersonById(writer)
+            return info
+            # for cast in castIds:
+
     def getMovieIndex(self,limit=0):
         sql='select id from movie ORDER BY id ASC'
         if limit:

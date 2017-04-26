@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
 from DB import MyDB
 from flask import Flask, render_template, request, jsonify, redirect,url_for,flash
+import os,pickle
 from flask.ext.login import LoginManager,login_user,current_user, login_required,logout_user
+from itemBasedCF import ItemBasedCF
 from User import User
 
 app = Flask(__name__)
 app.secret_key = 'super secret string'
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
 # 用户记录表
 users = [
     {'username': 'Tom', 'password': '111111'},
@@ -18,26 +19,30 @@ users = [
 
 # 通过用户名，获取用户记录，如果不存在，则返回None
 def query_user(username):
-    for user in users:
-        if user['username'] == username:
-            return user
+    mydb=MyDB()
+    res=mydb.getUser(username)
+    if res:
+        user=User(res[0],username,res[2],res[1])
+        # user.userName=username
+        # user.id=res[0]
+        # user.realName=res[1]
+        # user.password=res[2]
+        return user
 
 # 如果用户名存在则构建一个新的用户类对象，并使用用户名作为ID
 # 如果不存在，必须返回None
 @login_manager.user_loader
 def load_user(username):
-    if query_user(username) is not None:
-        curr_user = User()
-        curr_user.id = username
-        return curr_user
+    current_user=query_user(username)
+    if current_user is not None:
+        return current_user
 
 @login_manager.request_loader
 def load_user_from_request(request):
     username = request.args.get('token')
-    if query_user(username) is not None:
-        curr_user = User()
-        curr_user.id = username
-        return curr_user
+    current_user = query_user(username)
+    if current_user is not None:
+        return current_user
 
 @app.route('/')
 @login_required
@@ -47,7 +52,23 @@ def index():
 @app.route('/list')
 @login_required
 def list():
-    return render_template('list.html')
+    itemCF=ItemBasedCF()
+    pkl='pkl/itemSim.pkl'
+    if os.path.exists(pkl):
+        input = open(pkl, 'rb')
+        itemSim = pickle.load(input)
+        input.close()
+        itemCF.W=itemSim
+    else:
+        itemCF.ItemSimilarity()
+    data=itemCF.Recommend(int(current_user.get_id()))
+    res=[]
+    mydb=MyDB()
+    for id,score in data.items():
+        info=mydb.getMovInfo(id)
+        if info:
+            res.append(info)
+    return render_template('list.html',realName=current_user.get_realName(),data=res)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -55,12 +76,9 @@ def login():
         username = request.form.get('username')
         user = query_user(username)
         # 验证表单中提交的用户名和密码
-        if user is not None and request.form['password'] == user['password']:
-            curr_user = User()
-            curr_user.id = username
+        if user is not None and request.form['password'] == user.password:
             # 通过Flask-Login的login_user方法登录用户
-            login_user(curr_user)
-
+            login_user(username)
             # 如果请求中有next参数，则重定向到其指定的地址，
             # 没有next参数，则重定向到"index"视图
             next = request.args.get('next')

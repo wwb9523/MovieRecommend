@@ -3,6 +3,7 @@ import math
 from DB import MyDB
 import math,pickle
 from cluster import Cluster
+import pickle,os
 
 class ItemBasedCF:
     def __init__(self):
@@ -44,6 +45,11 @@ class ItemBasedCF:
             self.W.setdefault(i,{})
             for j,cij in related_items.items():
                 self.W[i][j] = cij / (math.sqrt(N[i] * N[j]))
+        os.chdir('G:\Git\MovieRecommend')
+        pkl='pkl/itemSim.pkl'
+        output = open(pkl, 'wb')
+        pickle.dump(self.W, output)
+        output.close()
         return self.W
 
     #给用户user推荐，前K个相关用户
