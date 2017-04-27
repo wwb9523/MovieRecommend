@@ -3,7 +3,7 @@ a:visited {  color: #666699;  text-decoration: none;  }
 a:link {  color: #37a;  text-decoration: none;  }
 a {  cursor: pointer;  }
 ol{list-style-type: none}
-
+a:hover {  color: #FFFFFF;  text-decoration: none;  background: #37a;  }
 .mov_name{word-wrap: break-word; display: block;  font-size: 25px;  font-weight: bold;  color: #494949;  margin: 0;  padding: 0 0 15px 0;  line-height: 1.1;}
 .year{color: #888;display: inline-block;    zoom: 1;}
 .mainpic{float: left;  text-align: center;  margin: 3px 12px 0 0;  max-width: 155px;  overflow: hidden;}

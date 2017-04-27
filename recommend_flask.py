@@ -11,18 +11,18 @@ app.secret_key = 'super secret string'
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 # 用户记录表
-users = [
-    {'username': 'Tom', 'password': '111111'},
-    {'username': 'Michael', 'password': '123456'}
-]
+# users = [
+#     {'username': 'Tom', 'password': '111111'},
+#     {'username': 'Michael', 'password': '123456'}
+# ]
 
 
 # 通过用户名，获取用户记录，如果不存在，则返回None
-def query_user(username):
+def query_user(userId):
     mydb=MyDB()
-    res=mydb.getUser(username)
+    res=mydb.getUser(userId)
     if res:
-        user=User(res[0],username,res[2],res[1])
+        user=User(res[0],res[1],res[3],res[2])
         # user.userName=username
         # user.id=res[0]
         # user.realName=res[1]
@@ -32,7 +32,7 @@ def query_user(username):
 # 如果用户名存在则构建一个新的用户类对象，并使用用户名作为ID
 # 如果不存在，必须返回None
 @login_manager.user_loader
-def load_user(username):
+def loaduser(username):
     current_user=query_user(username)
     if current_user is not None:
         return current_user
@@ -52,6 +52,7 @@ def index():
 @app.route('/list')
 @login_required
 def list():
+    print('list')
     itemCF=ItemBasedCF()
     pkl='pkl/itemSim.pkl'
     if os.path.exists(pkl):
@@ -61,7 +62,7 @@ def list():
         itemCF.W=itemSim
     else:
         itemCF.ItemSimilarity()
-    data=itemCF.Recommend(int(current_user.get_id()))
+    data=itemCF.Recommend(int(current_user.get_userId()))
     res=[]
     mydb=MyDB()
     for id,score in data.items():
@@ -78,11 +79,12 @@ def login():
         # 验证表单中提交的用户名和密码
         if user is not None and request.form['password'] == user.password:
             # 通过Flask-Login的login_user方法登录用户
-            login_user(username)
+            login_user(user,True)
+            print(user.get_id())
             # 如果请求中有next参数，则重定向到其指定的地址，
             # 没有next参数，则重定向到"index"视图
-            next = request.args.get('next')
-            return redirect(next or url_for('list'))
+            #next = request.args.get('next')
+            return redirect(url_for('list'))
         flash('Wrong username or password!')
     # GET 请求
     return render_template('login.html')

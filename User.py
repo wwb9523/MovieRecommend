@@ -12,5 +12,8 @@ class User(UserMixin):
     def get_realName(self):
         return self.realName
 
-    def get_userName(self):
+    def get_userId(self):
+        return self.id
+
+    def get_id(self):
         return self.userName

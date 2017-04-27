@@ -4,38 +4,53 @@
     <meta charset="UTF-8">
     <!--<script src="{{ url_for('static', filename='tagcanvas.min.js') }}"></script>-->
     <script src="{{ url_for('static', filename='jquery-1.6.2.min.js') }}"></script>
-
     <link href="{{ url_for('static', filename='list.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen">
     <link rel="archives" title="December 2010" href="http://pro.towfiqi.com/?m=201012">
     <link rel="stylesheet" href="{{ url_for('static', filename='lobster.css') }}" type="text/css" media="screen">
-    <!--<script type="text/javascript">-->
-<!--window.onload = function () {-->
-	<!--try {-->
-		<!--var i, et = document.getElementById('tags').childNodes;-->
-		<!--for (i in et) {-->
-			<!--et[i].nodeName == 'A' && et[i].addEventListener('click', function (e) {-->
-				<!--e.preventDefault();-->
-			<!--});-->
-		<!--}-->
+    <script type="text/javascript">
+        window.onload=function(){
+            var castList= getElementByClassName('attrs');
+            for(var i=0;i<castList.length;i++){
+                var flag=0;
+                var item=castList[i];
+                var casts=item.getElementsByTagName('span');
+                for(var j=0;j<casts.length;j++) {
+                    if (j > 3) {
+                        cast=casts[j];
+                        try {
+                            cast.style.display = 'none';
+                        }
+                        catch (err){
+                            alert(j)
+                        }
+                        flag = 1;
+                    }
+                }
+                if(flag==1){
+                    var para=document.createElement("a");
+                    var node=document.createTextNode("更多...");
+                    para.appendChild(node);
+                    item.appendChild(para);
+            }
+            }
 
-		<!--TagCanvas.Start('myCanvas', 'tags', {-->
-			<!--textColour: '#222',-->
-			<!--outlineColour: '#fff',-->
-			<!--reverse: true,-->
-			<!--depth: 0.8,-->
-			<!--dragControl: true,-->
-			<!--decel:0.95,-->
-			<!--maxSpeed: 0.05,-->
-			<!--initial: [-0.2, 0]-->
-		<!--});-->
-	<!--} catch (e) {-->
-		<!--// something went wrong, hide the canvas container-->
-		<!--//document.getElementById('myCanvasContainer').style.display = 'none';-->
-	<!--}-->
-<!--};-->
-<!--</script>-->
-
+        };
+        function getElementByClassName(classnames){
+            var objArray= new Array();//定义返回对象数组
+            var tags=document.getElementsByTagName("*");//获取页面所有元素
+            var index = 0;
+            for(var i in tags){
+                if(tags[i].nodeType==1){
+                    if(tags[i].getAttribute("class") == classnames){ //如果某元素的class值为所需要
+                        objArray[index]=tags[i];
+                        index++;
+                    }
+                }
+            }
+            return objArray;
+}
+    </script>
     <title>推荐列表</title>
 </head>
 <body>
@@ -44,36 +59,6 @@
     <div id="logo"><h1> <a href="#">Recommended List For {{realName}}</a>
     </h1></div>
     </div>
-{#    <div id="topmenu">#}
-{#        <div class="menu-header">#}
-{#            <ul id="menu-headmenu" class="menu">#}
-{#                <li id="menu-item-39" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-39" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#        <a href="http://pro.towfiqi.com/">Home</a>#}
-{#                </li>#}
-{#<li id="menu-item-40" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-40" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?page_id=2">About</a></li>#}
-{#<li id="menu-item-87" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-87" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?page_id=82">Sliders</a>#}
-{#    <ul class="sub-menu ul_hover" style="opacity: 0; margin-top: 20px; padding-top: 20px; display: none;">#}
-{#	<li id="menu-item-59" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-59" style="padding-left: 9px; padding-bottom: 4px; margin-top: 4px;"><a href="http://pro.towfiqi.com/?page_id=57">With No Sidebar</a></li>#}
-{#	<li id="menu-item-60" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-60" style="padding-left: 9px; padding-bottom: 4px;"><a href="http://pro.towfiqi.com/?page_id=55">With Left Sidebar</a></li>#}
-{#	<li id="menu-item-69" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-69" style="padding-left: 9px; padding-bottom: 4px;"><a href="http://pro.towfiqi.com/?page_id=67">Portfolio</a></li>#}
-{#<div class="submenu_bottom"></div></ul>#}
-{#</li>#}
-{#<li id="menu-item-45" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-45" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?page_id=22">Skins</a>#}
-{#</li>#}
-{#<li id="menu-item-61" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-61" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?page_id=53">Page Layouts</a>#}
-{#</li>#}
-{#<li id="menu-item-38" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-38" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?cat=1">Uncategorized</a></li>#}
-{#   <li id="menu-item-30" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-30" style="padding-left: 9px; padding-bottom: 4px;">#}
-{#    <a href="http://pro.towfiqi.com/?cat=1">Welcome Mike</a></li>#}
-{#</ul></div>#}
-{#    </div>#}
-
-
 
     <div id="movie_list">
     <ol>
@@ -85,8 +70,8 @@
                 <span class="year">{{ subject['year'] }}</span>
             </div>
                 <div  class="mainpic">
-                    <a class="nbgnbg" href="#" title="点击看更多海报">
-                        <img src="https://img3.doubanio.com/view/movie_poster_cover/lpst/public/p2425658570.webp" title="点击看更多海报" alt="La La Land" rel="v:image">
+                    <a class="nbgnbg" href="#">
+                        <img src="{{ subject['img'] }}" title="点击看更多海报" alt="海报" rel="v:image">
                    </a>
                 </div>
                 <div class="info">
@@ -94,8 +79,10 @@
                         <span class="pl">导演</span>:
                         <span class="attrs">
                             {% for item in subject['directory'] %}
+                                <span>
                             <a rel="v:directedBy">{{ item }}</a>
                                 {% if item!=subject['directory'][-1] %} / {% endif %}
+                                 </span>
                             {% endfor %}
                         </span>
                     </span>
@@ -103,26 +90,49 @@
                         <span class="pl">编剧</span>:
                         <span class="attrs">
                             {% for item in subject['writer'] %}
+                                <span>
                             <a>{{ item }}</a>
                                 {% if item!=subject['writer'][-1] %} / {% endif %}
-                                {% endfor %}
+                                 </span>
+                            {% endfor %}
+
                         </span>
                     </span>
                 <span class="actor"><span class='pl'>主演</span>:
                     <span class='attrs'>
                         {% for item in subject['cast'] %}
+                            <span class="cast">
                         <a  rel="v:starring">{{ item }}</a>
                             {% if item!=subject['cast'][-1] %} / {% endif %}
+                            </span>
                         {% endfor %}
                     </span>
                 </span>
+                <br/>
                 <span class="pl">类型:</span>
                 {% for item in subject['genres'] %}
                     <span property="v:genre">{{ item }}
                     {% if item!=subject['genres'][-1] %} / {% endif %}
                 </span>
                     {% endfor %}
-
+                <br/>
+                 <span class="pl">制片国家/地区:</span>
+                     {% for item in subject['country'] %}
+                    <span property="v:genre">{{ item }}
+                    {% if item!=subject['country'][-1] %} / {% endif %}
+                    </span>
+                    {% endfor %}
+                <br/>
+                <span class="pl">语言:</span>
+                     {% for item in subject['language'] %}
+                    <span property="v:genre">{{ item }}
+                    {% if item!=subject['language'][-1] %} / {% endif %}
+                    </span>
+                    {% endfor %}
+                <br/>
+                <span class="pl">上映年份:{{ subject['year'] }}年</span><br/>
+                <span class="pl">片长:{{ subject['length'] }}年</span><br/>
+                <span class="pl">又名:{{ subject['aka'] }}年</span>
                 </div>
                 <div class="clearfix"></div>
             </div>

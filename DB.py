@@ -6,9 +6,11 @@ import sys
 class MyDB(object):
     def __init__(self):
         self.db = pymysql.connect(
+            #host='98.142.140.54',
             host='127.0.0.1',
             port = 3306,
             user='root',
+            #passwd='APTX4369',
             passwd='',
             db ='test',
             charset='utf8'
@@ -18,7 +20,7 @@ class MyDB(object):
     def getUser(self,username):
         if not username:
             return None
-        sql='select id,real_name,user_password from user where user_name="%s"'%pymysql.escape_string(username)
+        sql='select id,user_name,real_name,user_password from user where user_name="%s"'%pymysql.escape_string(username)
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
         if res:
@@ -44,6 +46,8 @@ class MyDB(object):
         return result
 
     def getLanguageById(self,ids):
+        if not ids:
+            return []
         sql = "select name from language where id in (%s)"
         in_p = ', '.join(map(lambda x: str(x), ids))
         sql = sql % (in_p)
@@ -55,6 +59,8 @@ class MyDB(object):
         return result
 
     def getGenresById(self,ids):
+        if not ids:
+            return []
         sql = "select name from genres where id in (%s)"
         in_p = ', '.join(map(lambda x: str(x), ids))
         sql = sql % (in_p)
@@ -66,23 +72,31 @@ class MyDB(object):
         return result
 
     def getCountryById(self,ids):
+        if not ids:
+            return []
         sql = "select name from countries where id in (%s)"
         in_p = ', '.join(map(lambda x: str(x), ids))
         sql = sql % (in_p)
-        self.cursor.execute(sql)
-        res = self.cursor.fetchall()
+        try:
+            self.cursor.execute(sql)
+            res = self.cursor.fetchall()
+        except:
+            return None
         result = []
         for item in res:
             result.append(item[0])
         return result
 
     def getMovInfo(self,id):
-        sql='select id,title,aka,year,length from movie where id=%s'%id
+        sql='select id,title,aka,year,length,img_url from movie where id=%s'%id
         self.cursor.execute(sql)
         movies = self.cursor.fetchall()
         if  len(movies)>0:
             movie=movies[0]
-            info = {'cast': '', 'country': '', 'directory': '', 'genres': '', 'language': '', 'writer': '','title':movie[1],'aka':movie}
+            info = {'cast': '', 'country': '', 'directory': '', 'genres': '',
+                    'language': '', 'writer': '','title':movie[1],'aka':movie[2],'img':movie[5],
+                    'length':movie[4],'year':movie[3]
+                    }
             id=movie[0]
             print(id)
             castIds=list(map(lambda x:x[0],self.getCastRela(id)))
