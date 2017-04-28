@@ -7,7 +7,7 @@ import pickle,os,sys
 
 class ItemBasedCF:
     def __init__(self):
-        self.readData()
+        pass
 
     def readData(self):
         mydb=MyDB()
@@ -27,6 +27,7 @@ class ItemBasedCF:
             self.test[user][item] = int(score)
 
     def ItemSimilarity(self):
+        self.readData()
         #建立物品-物品的共现矩阵
         C = dict()  #物品-物品的共现矩阵
         N = dict()  #物品被多少个不同用户购买

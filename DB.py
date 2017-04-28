@@ -98,7 +98,6 @@ class MyDB(object):
                     'length':movie[4],'year':movie[3]
                     }
             id=movie[0]
-            print(id)
             castIds=list(map(lambda x:x[0],self.getCastRela(id)))
             countries=list(map(lambda x:x[0],self.getCountryRela(id)))
             direct=list(map(lambda x:x[0],self.getDirectorsRela(id)))

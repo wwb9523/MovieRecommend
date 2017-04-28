@@ -31,6 +31,21 @@
                     var para=document.createElement("a");
                     var node=document.createTextNode("更多...");
                     para.appendChild(node);
+                    para.className="more-attr";
+                    para.onclick=function () {
+                        var a=this;
+                        var list=a.parentNode;
+                        var chils=list.childNodes;
+                        for(var n=0;n<chils.length;n++) {
+                            try {
+                                chils[n].style.display = "inline-block"
+                            }
+                            catch (err){
+
+                            }
+                        }
+                        a.style.display="none"
+                    };
                     item.appendChild(para);
             }
             }
@@ -56,8 +71,11 @@
 <body>
 <div id="wrapper">
     <div id="header">
-    <div id="logo"><h1> <a href="#">Recommended List For {{realName}}</a>
+        <h1><a id="logout" href="{{ url_for('logout') }}">Logout</a></h1>
+    <div id="logo">
+        <h1> <a >Recommended List  For &nbsp; {{realName}}</a>
     </h1></div>
+
     </div>
 
     <div id="movie_list">
@@ -74,6 +92,7 @@
                         <img src="{{ subject['img'] }}" title="点击看更多海报" alt="海报" rel="v:image">
                    </a>
                 </div>
+            {% if subject['directory'] %}
                 <div class="info">
                     <span class="info_list">
                         <span class="pl">导演</span>:
@@ -86,6 +105,8 @@
                             {% endfor %}
                         </span>
                     </span>
+                {% endif %}
+                {% if subject['writer'] %}
                     <span class="info_list">
                         <span class="pl">编剧</span>:
                         <span class="attrs">
@@ -95,9 +116,10 @@
                                 {% if item!=subject['writer'][-1] %} / {% endif %}
                                  </span>
                             {% endfor %}
-
                         </span>
                     </span>
+                {% endif %}
+                {% if subject['cast'] %}
                 <span class="actor"><span class='pl'>主演</span>:
                     <span class='attrs'>
                         {% for item in subject['cast'] %}
@@ -108,7 +130,10 @@
                         {% endfor %}
                     </span>
                 </span>
-                <br/>
+                    <br/>
+                {% endif %}
+
+            {% if subject['genres'] %}
                 <span class="pl">类型:</span>
                 {% for item in subject['genres'] %}
                     <span property="v:genre">{{ item }}
@@ -116,6 +141,8 @@
                 </span>
                     {% endfor %}
                 <br/>
+                  {% endif %}
+            {% if subject['country'] %}
                  <span class="pl">制片国家/地区:</span>
                      {% for item in subject['country'] %}
                     <span property="v:genre">{{ item }}
@@ -123,6 +150,8 @@
                     </span>
                     {% endfor %}
                 <br/>
+            {% endif %}
+    {% if subject['language'] %}
                 <span class="pl">语言:</span>
                      {% for item in subject['language'] %}
                     <span property="v:genre">{{ item }}
@@ -130,6 +159,7 @@
                     </span>
                     {% endfor %}
                 <br/>
+    {% endif %}
                 <span class="pl">上映年份:{{ subject['year'] }}年</span><br/>
                 <span class="pl">片长:{{ subject['length'] }}年</span><br/>
                 <span class="pl">又名:{{ subject['aka'] }}年</span>

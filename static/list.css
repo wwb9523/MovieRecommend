@@ -1,9 +1,9 @@
 /*body, td, th {  font: 12px Helvetica,Arial,sans-serif;  line-height: 1.62;  }*/
 a:visited {  color: #666699;  text-decoration: none;  }
 a:link {  color: #37a;  text-decoration: none;  }
-a {  cursor: pointer;  }
+
 ol{list-style-type: none}
-a:hover {  color: #FFFFFF;  text-decoration: none;  background: #37a;  }
+
 .mov_name{word-wrap: break-word; display: block;  font-size: 25px;  font-weight: bold;  color: #494949;  margin: 0;  padding: 0 0 15px 0;  line-height: 1.1;}
 .year{color: #888;display: inline-block;    zoom: 1;}
 .mainpic{float: left;  text-align: center;  margin: 3px 12px 0 0;  max-width: 155px;  overflow: hidden;}
@@ -22,4 +22,8 @@ form#search_form {  float: left; margin-left: 20px; }
     box-shadow: 0 2px 0 #000;  color: #888;  display: block;  float: left;  font-family: 'Cabin', helvetica, arial, sans-serif;
     font-size: 13px;  font-weight: 400;  height: 40px;  margin: 0;  padding: 0 10px;  text-shadow: 0 -1px 0 #000;  width: 200px;
 }
-
+.subject {  margin-bottom: 20px;  }
+#wrapper {  color: #111;  }
+.subject a:hover {  color: #FFFFFF;  text-decoration: none;  background: #37a;  }
+.subject a {   color:#37a; }
+#logout{float: right;}

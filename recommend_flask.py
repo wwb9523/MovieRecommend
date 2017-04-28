@@ -93,7 +93,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return 'Logged out successfully!'
+    return redirect(url_for('login'))
 
 @app.route('/recommend')
 @login_required
