@@ -104,9 +104,21 @@ def silPkl(file):
         output.close()
 
 if __name__=='__main__':
-    time1=time.time()
-    file='pkl/clf1000_8_10973113.0374.pkl'
-    silPkl(file)
-    time2=time.time()
-    print('total time: '+str(time2-time1))
+    #time1=time.time()
+    #file='pkl/clf1000_8_10973113.0374.pkl'
+    os.chdir(os.path.split(os.path.realpath(__file__))[0])
+    dir = './pkl/'
+    data = []
+    list = os.listdir(dir)
+    for i in range(0, len(list)):
+        path = os.path.join(dir, list[i])
+        if os.path.isfile(path):
+            datas = list[i].split('_')
+            if len(datas) == 3:
+                print(path)
+                silPkl(path)
+                os.remove(path)
+    # silPkl(file)
+    # time2=time.time()
+    # print('total time: '+str(time2-time1))
 

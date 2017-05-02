@@ -54,15 +54,48 @@ def getImgUrl(douId):
     if imgs:
         return imgs[0]
 
+def dealImage():
+    data = getData()
+    for item in data:
+        res = getImgUrl(item[1])
+        if res:
+            updateMov(item[0], res)
+        else:
+            updateMov(item[0], '')
+            print(item[0])
+        db.commit()
+        time.sleep(2)
+
+def dealLength():
+    sql = 'select id,length from movie where lengths is null'
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    for item in res:
+        id=item[0]
+        length=item[1]
+        print(id)
+        pattern=re.compile(r'(\d+)[分m:]',re.I)
+        mini=pattern.findall(length)
+        pattern1=re.compile(r'(\d+)(时|hour|hr|小时)',re.I)
+        h=pattern1.findall(length)
+        time=0
+        if len(h)>0:
+            print(h)
+            time+=int(h[0][0])*60
+        if len(mini)>0:
+            time+=int(mini[0])
+        if not time:
+            pattern2=re.compile(r'(\d+)')
+            t=pattern2.findall(length)
+            if  t:
+                time=t[0]
+        sql='update movie set lengths=%s where id=%s'%(time,id)
+        cursor.execute(sql)
+    db.commit()
+
+        #print(time)
+
+
+
 if __name__=='__main__':
-  #  while True:
-        data=getData()
-        for item in data:
-            res=getImgUrl(item[1])
-            if res:
-                updateMov(item[0],res)
-            else:
-                updateMov(item[0], '')
-                print(item[0])
-            db.commit()
-            time.sleep(2)
+    dealLength()

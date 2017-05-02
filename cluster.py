@@ -83,13 +83,13 @@ def loop():
     p.join()
 
 if __name__=='__main__':
-    cluster = Cluster()
-    cluster.recommend(5,3)
+    # cluster = Cluster()
+    # cluster.recommend(5,3)
     #loop()
-    # while(True):
-    #     t1=time.time()
-    #     cluster=Cluster()
-    #     cluster.clustering(5,2000)
-    #     t2=time.time()
-    #     print(t2-t1)
+    while(True):
+        t1=time.time()
+        cluster=Cluster()
+        cluster.clustering(3,1000)
+        t2=time.time()
+        print(t2-t1)
 

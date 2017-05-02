@@ -95,14 +95,31 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/recommend')
-@login_required
-def recommend():
-    if request.method == 'POST':
-        tags_id=request.form.get('tag')
-        word = request.form.get('word')
-        file = request.files['data']
-        return jsonify(results={"tags_id":tags_id,"word":word,"file":file.filename})
+@app.route('/canvas')
+def canvas():
+
+    os.chdir(os.path.split(os.path.realpath(__file__))[0])
+    dir='./pkl/'
+    data=[]
+    list = os.listdir(dir)
+    res = []
+    for i in range(0, len(list)):
+        path = os.path.join(dir, list[i])
+        if os.path.isfile(path):
+            datas=list[i].split('_')
+            if len(datas)==4:
+                if int(datas[0][3:])==1000 and int(datas[1])==4:
+                    point=[]
+                    point.append(datas[2])
+                    point.append(datas[3][:-4])
+                    res.append(point)
+                    # mv['num']=datas[0][3:]
+                    # mv['center']=datas[1]
+    sorted(res)
+    return render_template('canvas.html',data=res,num=1000,center=4)
+            # fname = os.path.splitext(f)
+            # new = fname[0] + 'b' + fname[1]
+            # os.rename(os.path.join(rt, f), os.path.join(rt, new))
 
 if __name__=='__main__':
     app.run('0.0.0.0',80,True)

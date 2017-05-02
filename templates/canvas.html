@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{{ url_for('static', filename='jquery-1.6.2.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='canvas.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lobster.css') }}" type="text/css" media="screen">
+    <script type="text/javascript" src="{{ url_for('static', filename='flotr2.min.js') }}">  </script>
+    <script>
+
+    </script>
+    <title>canvas</title>
+</head>
+<body>
+<div id="editor-render-0"></div>
+</body>
+<script type="text/javascript">
+    container=document.getElementById("editor-render-0");
+    (function basic(container) {
+                var
+                        num={{ num }},
+                        center={{ center }},
+                        d1 = [], // First data series
+                        i, graph;
+                // Draw Graph
+        {% for item in data %}
+            var l=[];
+            {% for p in item %}
+                l.push({{ p }});
+            {% endfor %}
+            d1.push(l);
+        {% endfor %}
+                graph = Flotr.draw(container, [d1], {
+                    xaxis: {
+                        minorTickFreq: 4
+                    },
+                    grid: {
+                        minorVerticalLines: true
+                    }
+                });
+            })(document.getElementById("editor-render-0"));
+{#    window.onload=function () {#}
+{#        var container = document.getElementById("container");#}
+{#        basic(container)#}
+{#    }#}
+</script>
+</html>
