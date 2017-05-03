@@ -39,6 +39,7 @@ class Cluster(object):
         label = mk._labels
         item_label=np.nonzero(label==label[item-1])[0]+1
         items=mydb.getMinDistance(item,k)
+        mydb.db.close()
         recom_items=[]
         for movId1,movId2,distance in items:
             ritem=lambda x,y: x if y==item else y
@@ -52,6 +53,7 @@ class Cluster(object):
         print(k)
         mydb=MyDB()
         movIndex=mydb.getMovieIndex(limit)
+        mydb.db.close()
         clf = KMeansClassifier(k)
         clf.fit_sim(movIndex)
        # print(clf._labels)
@@ -86,10 +88,12 @@ if __name__=='__main__':
     # cluster = Cluster()
     # cluster.recommend(5,3)
     #loop()
+    lt=[8,9,6,10,7]
+    i=0
     while(True):
-        t1=time.time()
         cluster=Cluster()
-        cluster.clustering(3,1000)
-        t2=time.time()
-        print(t2-t1)
+        cluster.clustering(lt[i],1000)
+        i=i+1
+        if i>len(lt)-1:
+            i=0
 

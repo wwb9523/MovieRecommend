@@ -97,29 +97,89 @@ def logout():
 
 @app.route('/canvas')
 def canvas():
-
     os.chdir(os.path.split(os.path.realpath(__file__))[0])
-    dir='./pkl/'
-    data=[]
+    type=request.args.get('type')
+    res=[]
+    if not type:
+        res=sse_sil()
+    elif type=='1':
+        res=sse_sil()
+    elif type=='2':
+        res=k_sil()
+    elif type=='3':
+        k=request.args.get('k')
+        if k:
+            res=label_count(k)
+            return render_template('canvas.html', labelData=res, num=1000, center=4)
+        else:
+            return 'No K value!'
+    return render_template('canvas.html',data=res,num=1000,center=4)
+            # fname = os.path.splitext(f)
+            # new = fname[0] + 'b' + fname[1]
+            # os.rename(os.path.join(rt, f), os.path.join(rt, new))
+
+def sse_sil(dir = './pkl/'):
     list = os.listdir(dir)
     res = []
     for i in range(0, len(list)):
         path = os.path.join(dir, list[i])
         if os.path.isfile(path):
-            datas=list[i].split('_')
-            if len(datas)==4:
-                if int(datas[0][3:])==1000 and int(datas[1])==4:
-                    point=[]
+            datas = list[i].split('_')
+            if len(datas) == 4:
+                if int(datas[0][3:]) == 1000 and int(datas[1]) == 4:
+                    point = []
                     point.append(datas[2])
                     point.append(datas[3][:-4])
                     res.append(point)
-                    # mv['num']=datas[0][3:]
-                    # mv['center']=datas[1]
     sorted(res)
-    return render_template('canvas.html',data=res,num=1000,center=4)
-            # fname = os.path.splitext(f)
-            # new = fname[0] + 'b' + fname[1]
-            # os.rename(os.path.join(rt, f), os.path.join(rt, new))
+    return res
+
+def k_sil(dir = './pkl/'):
+    list = os.listdir(dir)
+    res = []
+    d={}
+    num={}
+    for i in range(0, len(list)):
+        path = os.path.join(dir, list[i])
+        if os.path.isfile(path):
+            datas = list[i].split('_')
+            if len(datas) == 4:
+                if int(datas[0][3:]) == 1000:
+                    k=int(datas[1])
+                    d.setdefault(k,0)
+                    num.setdefault(k,0)
+                    d[k]=d[k]+float(datas[3][:-4])
+                    num[k]=num[k]+1
+    for key,value in d.items():
+        p=[]
+        p.append(key)
+        p.append(value/num[key])
+        res.append(p)
+    return res
+
+def label_count(k,dir = './pkl/'):
+    list = os.listdir(dir)
+    res = []
+    max=0
+    file=''
+    for i in range(0, len(list)):
+        path = os.path.join(dir, list[i])
+        if os.path.isfile(path):
+            datas = list[i].split('_')
+            if len(datas) == 4:
+                if int(datas[1])==k and int(datas[0][3:]) == 1000:
+                    if int(datas[3][-4])>max:
+                        file=path
+    input = open(file, 'rb')
+    mk = pickle.load(input)
+    input.close()
+    label = mk._labels
+    for i in range(mk._k):
+        p=[]
+        p.append(i+1)
+        p.append(len(label==i+1))
+        res.append(p)
+    return res
 
 if __name__=='__main__':
     app.run('0.0.0.0',80,True)

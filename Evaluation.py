@@ -33,17 +33,17 @@ def getAi(labels,i):
     if i not in label:
         return -1
     dsAll=0
+    mydb = MyDB()
     for index in label:
         distance = sim.get(min(i+1,index+1)).get(max(i+1, index+1))
         if not distance:
-            mydb = MyDB()
             movie1 = Movie().getMovieById(i+1)
             movie2 = Movie().getMovieById(index+1)
             distance = distMovie(movie1, movie2)
             mydb.insertDistance(i+1, index+1, distance)
-            mydb.db.commit()
-            mydb.db.close()
         dsAll=dsAll+distance
+    mydb.db.commit()
+    mydb.db.close()
     ai=dsAll/len(label)
     return ai
 
@@ -51,6 +51,7 @@ def getAi(labels,i):
 def getBi(labels,i):
     ds=[]
     global sim
+    mydb = MyDB()
     for key, item in labels.items():
         if i in item:
             continue
@@ -60,17 +61,16 @@ def getBi(labels,i):
             movId2=max(i + 1, index + 1)
             distance = sim.get(movId1).get(movId2)
             if not distance:
-                mydb = MyDB()
                 movie1 = Movie().getMovieById(movId1)
                 movie2 = Movie().getMovieById(movId2)
                 distance = distMovie(movie1, movie2)
                 mydb.insertDistance(movId1, movId2, distance)
                 sim.setdefault(movId1, {})
                 sim[movId1][movId2] = distance
-                mydb.db.commit()
-                mydb.db.close()
             dsAll = dsAll + distance
         ds.append(dsAll)
+    mydb.db.commit()
+    mydb.db.close()
     bi=min(ds)
     return bi
 
@@ -116,8 +116,9 @@ if __name__=='__main__':
             datas = list[i].split('_')
             if len(datas) == 3:
                 print(path)
-                silPkl(path)
-                os.remove(path)
+                res=silPkl(path)
+                if res!=-1:
+                    os.remove(path)
     # silPkl(file)
     # time2=time.time()
     # print('total time: '+str(time2-time1))
