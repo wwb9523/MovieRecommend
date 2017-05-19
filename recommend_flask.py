@@ -59,7 +59,7 @@ def list():
         input = open(pkl, 'rb')
         itemSim = pickle.load(input)
         input.close()
-        itemCF.W=itemSim
+        itemCF=itemSim
     else:
         itemCF.ItemSimilarity()
     data=itemCF.Recommend(int(current_user.get_userId()))

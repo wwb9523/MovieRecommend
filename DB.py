@@ -341,6 +341,7 @@ class MyDB(object):
 
     def insertUser(self,userName,userPassword,email,realName):
         sql='insert into user(user_name,user_password,email,real_name) values("%s","%s","%s","%s")'%(pymysql.escape_string(userName),pymysql.escape_string(userPassword),pymysql.escape_string(email),pymysql.escape_string(realName))
+        print(sql)
         return  self.cursor.execute(sql)
 
     def getMinDistance(self,movId1,limit=100):

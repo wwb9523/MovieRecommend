@@ -23,14 +23,14 @@ def dealUdata():
     mydb.db.commit()
     mydb.db.close()
 
-def dealUserInfo():
+def dealUserInfo(k=100):
     mydb = MyDB()
-    for _ in range(100):
+    for _ in range(k):
         user = fake.simple_profile()
         mydb.insertUser(user['username'],user['birthdate'].replace('-',''),user['mail'],user['name'])
-    mydb.db.commit()
+        mydb.db.commit()
     mydb.db.close()
 
 if __name__=='__main__':
-    dealUserInfo()
+    dealUserInfo(843)
 

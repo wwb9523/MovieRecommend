@@ -31,22 +31,32 @@ class Cluster(object):
         return np.sqrt(np.sum(np.square(vect1 - vect2)))
 
 
-    def recommend(self,item,k,pkl='pkl/clf1000_4_11309989.1559.pkl'):
-        mydb=MyDB()
+
+    def recommend(self,item=None,k=10,pkl='pkl/clf1000_3_12206952.6048_0.997818572305.pkl'):
         input = open(pkl, 'rb')
         mk = pickle.load(input)
         input.close()
         label = mk._labels
+        recom_items = []
+        if not item:
+            center = mk._centroids
+            result={}
+            for c in center:
+                d1=self.recommend(int(c),5)
+                d2=result.copy()
+                d2.update(d1)
+                result=d2
+            return result
+        mydb=MyDB()
         item_label=np.nonzero(label==label[item-1])[0]+1
         items=mydb.getMinDistance(item,k)
         mydb.db.close()
-        recom_items=[]
         for movId1,movId2,distance in items:
             ritem=lambda x,y: x if y==item else y
             recom_item=ritem(movId1,movId2)
             if recom_item in item_label:
-                recom_items.append(recom_item)
-        return recom_items
+                recom_items.append([recom_item,distance])
+        return dict(recom_items)
 
 
     def clustering(self,k=3,limit=1000):

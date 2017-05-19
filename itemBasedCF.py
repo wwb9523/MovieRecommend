@@ -50,7 +50,7 @@ class ItemBasedCF:
         print(os.path.split(os.path.realpath(__file__))[0])
         pkl='pkl/itemSim.pkl'
         output = open(pkl, 'wb')
-        pickle.dump(self.W, output)
+        pickle.dump(self, output)
         output.close()
         return self.W
 
@@ -58,23 +58,27 @@ class ItemBasedCF:
     def Recommend(self,user,K=100,N=30):
         cluster=Cluster()
         rank = dict()
-        action_item = self.train[user] #用户user产生过行为的item和评分
         length=dict()
-        for item,score in action_item.items():
-            if item > 1000:
-                continue
-            cluster_recom = cluster.recommend(item, 10)
-            for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True)[:100]:
-                if j in action_item.keys():
+        if user not in self.train:
+            res=cluster.recommend()
+            return res
+        else:
+            action_item = self.train[user]  # 用户user产生过行为的item和评分
+            for item,score in action_item.items():
+                if item > 1000:
                     continue
-                if j not in cluster_recom:
-                    continue
-                rank.setdefault(j,0)
-                rank[j] += score * wj
-                length.setdefault(j,0)
-                length[j]=length[j]+wj
-        for item,score in rank.items():
-            rank[item]=rank[item]/length[item]
+                cluster_recom = cluster.recommend(item, 10)
+                for j,wj in sorted(self.W[item].items(),key=lambda x:x[1],reverse=True)[:100]:
+                    if j in action_item.keys():
+                        continue
+                    if j not in cluster_recom:
+                        continue
+                    rank.setdefault(j,0)
+                    rank[j] += score * wj
+                    length.setdefault(j,0)
+                    length[j]=length[j]+wj
+            for item,score in rank.items():
+                rank[item]=rank[item]/length[item]
         res=dict(sorted(rank.items(),key=lambda x:x[1],reverse=True)[:30])
         return res
 
